@@ -96,26 +96,45 @@ src/
 
 ## Деплой
 
-### GitHub Pages
+### Web (PWA)
+
+#### GitHub Pages
 
 ```bash
 npm run build
 # Загрузите содержимое папки dist на GitHub Pages
 ```
 
-### Vercel
+#### Vercel
 
 ```bash
 npm i -g vercel
 vercel
 ```
 
-### Netlify
+#### Netlify
 
 ```bash
 npm run build
 # Загрузите папку dist на Netlify
 ```
+
+### Android APK
+
+#### Автоматическая сборка через GitHub Actions
+
+APK автоматически собирается при каждом push в `main`:
+
+1. Перейдите на https://github.com/MarinaT2103/Planer/releases
+2. Скачайте последний `app-release-signed.apk`
+3. Установите на Android 12+ устройство
+4. Введите PIN: **1590**
+
+**Подробнее:** `.github/ACTIONS_README.md`
+
+#### Ручная сборка
+
+См. инструкции в `android-app/README.md`
 
 ## Лицензия
 
