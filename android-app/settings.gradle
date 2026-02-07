@@ -1,2 +1,2 @@
-rootProject.name = "Планировщик"
+rootProject.name = "Planner"
 include ':app'
