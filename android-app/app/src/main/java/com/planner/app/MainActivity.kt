@@ -39,12 +39,11 @@ class MainActivity : AppCompatActivity() {
         webView.webChromeClient = WebChromeClient()
 
         // Load your deployed app or localhost
-        // Production: замените на URL вашего деплоя
-        webView.loadUrl("https://your-app.netlify.app")
+        // For local development (same WiFi network):
+        webView.loadUrl("http://192.168.1.10:5173")
         
-        // For development with local server:
-        // webView.loadUrl("http://10.0.2.2:5173")  // Android Emulator
-        // webView.loadUrl("http://YOUR_LOCAL_IP:5173")  // Physical device
+        // For production, uncomment and set your deployed URL:
+        // webView.loadUrl("https://your-app.netlify.app")
     }
 
     override fun onBackPressed() {
