@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.planner.app"
+        applicationId = "com.marinat2103.planer"
         minSdk = 31  // Android 12
         targetSdk = 34
         versionCode = 1
