@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import {
   Home,
@@ -27,7 +27,7 @@ function App() {
 
   return (
     <PasswordLock>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/plans/day" element={<DayPlans />} />
@@ -68,7 +68,7 @@ function App() {
             }
           }}
         />
-      </BrowserRouter>
+      </HashRouter>
     </PasswordLock>
   );
 }

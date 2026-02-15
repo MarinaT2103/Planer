@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity() {
         webView.webViewClient = LocalContentWebViewClient(assetLoader)
         webView.webChromeClient = WebChromeClient()
 
-        webView.loadUrl("https://appassets.androidplatform.net/index.html")
+        // #/ нужен для React Router (pathname / при загрузке из index.html)
+        webView.loadUrl("https://appassets.androidplatform.net/index.html#/")
     }
 
     private inner class LocalContentWebViewClient(
