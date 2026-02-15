@@ -1,116 +1,39 @@
-# GitHub Actions для автоматической сборки Android APK
+# GitHub Actions — сборка Android APK
 
-Этот проект настроен для автоматической сборки Android APK через GitHub Actions.
+Автоматическая сборка **офлайн-версии** планировщика для Android 12+. Веб-приложение встраивается в APK и работает без интернета.
 
 ## Как это работает
 
 При каждом push в ветку `main`:
-1. GitHub Actions автоматически запускает сборку
-2. Компилируется Android приложение
-3. APK подписывается тестовым ключом
-4. Создаётся новый релиз с APK файлом
-5. APK доступен для скачивания в разделе Releases
+1. Собирается веб-приложение (`npm run build`)
+2. Контент копируется в Android assets
+3. Компилируется Android приложение
+4. APK подписывается (v2 + v3)
+5. Артефакт доступен 30 дней
 
 ## Где скачать APK
 
-### Вариант 1: Releases
-Перейдите на: https://github.com/MarinaT2103/Planer/releases
+### Artifacts (основной способ)
 
-Там будут автоматически создаваться релизы с APK файлами.
+1. Перейдите: **[https://github.com/MarinaT2103/Planer/actions](https://github.com/MarinaT2103/Planer/actions)**
+2. Выберите последнюю успешную сборку (зелёная галочка)
+3. Прокрутите вниз до **Artifacts**
+4. Скачайте **planner-release-apk**
+5. Распакуйте ZIP → установите `app-release-signed.apk`
 
-### Вариант 2: Artifacts
-1. Перейдите в: https://github.com/MarinaT2103/Planer/actions
-2. Выберите последний успешный workflow
-3. Внизу страницы найдите "Artifacts"
-4. Скачайте `planner-release-apk`
+### Ручной запуск
 
-## Ручной запуск сборки
-
-1. Перейдите на: https://github.com/MarinaT2103/Planer/actions
-2. Выберите "Build Android APK"
-3. Нажмите "Run workflow"
-4. Выберите ветку `main`
-5. Нажмите "Run workflow" ещё раз
-
-## Установка собранного APK
-
-### На устройстве:
-1. Скачайте APK файл из Releases
-2. Откройте файл на Android устройстве
-3. Разрешите установку из неизвестных источников (если попросит)
-4. Установите приложение
-5. Откройте приложение и введите PIN: **1590**
-
-### Через ADB:
-```bash
-adb install app-release-signed.apk
-```
+1. [Actions](https://github.com/MarinaT2103/Planer/actions) → **Build Android APK**
+2. **Run workflow** → **Run workflow**
+3. Дождитесь завершения (~3–5 мин)
 
 ## Требования
 
-- **Android 12** (API 31) или выше
-- Около 10 МБ свободного места
-
-## Автоматизация
-
-GitHub Actions автоматически:
-- ✅ Проверяет код
-- ✅ Устанавливает Java JDK 17
-- ✅ Собирает APK
-- ✅ Подписывает APK
-- ✅ Создаёт Release
-- ✅ Загружает APK в Artifacts
-
-## Время сборки
-
-Обычно занимает 3-5 минут.
-
-## Статус сборки
-
-![Build Status](https://github.com/MarinaT2103/Planer/actions/workflows/android-build.yml/badge.svg)
-
-## Примечания
-
-- **Тестовая подпись**: APK подписан автоматически созданным ключом для тестирования
-- **Production**: Для публикации в Google Play нужен собственный keystore
-- **Безопасность**: Не храните production ключи в репозитории!
-
-## Для production релизов
-
-Если хотите подписывать APK своим ключом:
-
-1. Создайте keystore:
-```bash
-keytool -genkey -v -keystore release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias planner
-```
-
-2. Закодируйте в base64:
-```bash
-base64 release-key.jks > release-key-base64.txt
-```
-
-3. Добавьте secrets в GitHub:
-   - Settings → Secrets → New repository secret
-   - `KEYSTORE_FILE`: содержимое release-key-base64.txt
-   - `KEYSTORE_PASSWORD`: пароль от keystore
-   - `KEY_ALIAS`: alias ключа
-   - `KEY_PASSWORD`: пароль ключа
-
-4. Обновите workflow для использования secrets
+- Android 12 (API 31) или выше
+- PIN-код: **1590**
 
 ## Ссылки
 
-- **Репозиторий**: https://github.com/MarinaT2103/Planer
-- **Actions**: https://github.com/MarinaT2103/Planer/actions
-- **Releases**: https://github.com/MarinaT2103/Planer/releases
-
-## Поддержка
-
-При возникновении проблем со сборкой:
-1. Проверьте логи в Actions
-2. Убедитесь, что все файлы добавлены в git
-3. Проверьте права доступа на gradlew
-
-## Лицензия
-
-MIT
+- [Репозиторий](https://github.com/MarinaT2103/Planer)
+- [Actions](https://github.com/MarinaT2103/Planer/actions)
+- [Releases](https://github.com/MarinaT2103/Planer/releases)
