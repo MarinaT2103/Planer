@@ -22,6 +22,23 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies and build web app
+      run: |
+        npm ci
+        npm run build
+
+    - name: Copy web build to Android assets
+      run: |
+        mkdir -p android-app/app/src/main/assets
+        rm -rf android-app/app/src/main/assets/*
+        cp -r dist/* android-app/app/src/main/assets/
+
     - name: Grant execute permission for gradlew
       run: chmod +x android-app/gradlew
 
@@ -40,12 +57,20 @@ jobs:
           -storepass android -keypass android \
           -dname "CN=Planner, OU=Dev, O=Planner, L=City, S=State, C=RU"
         
-        # Подписываем APK
-        $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
+        # Находим apksigner (build-tools мог скачаться Gradle в другую папку)
+        APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner 2>/dev/null | head -1)
+        if [ -z "$APKSIGNER" ]; then
+          APKSIGNER="$ANDROID_HOME/build-tools/34.0.0/apksigner"
+        fi
+        
+        # Подписываем APK (v2 и v3 для совместимости с Android 12+)
+        $APKSIGNER sign \
           --ks release-key.jks \
           --ks-key-alias planner \
           --ks-pass pass:android \
           --key-pass pass:android \
+          --v2-signing-enabled true \
+          --v3-signing-enabled true \
           --out app/build/outputs/apk/release/app-release-signed.apk \
           app/build/outputs/apk/release/app-release-unsigned.apk
 
@@ -67,6 +92,7 @@ jobs:
           📱 Android APK Build #${{ github.run_number }}
           
           ## Что нового:
+          - Локальная офлайн-версия (работает без интернета)
           - Автоматическая сборка через GitHub Actions
           - Подписанный APK готов к установке
           

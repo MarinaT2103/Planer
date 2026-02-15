@@ -2,14 +2,18 @@ package com.planner.app
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.webkit.WebChromeClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.webkit.WebViewAssetLoader
+import androidx.webkit.WebViewAssetLoader.AssetsPathHandler
+import androidx.webkit.WebViewClientCompat
 
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var webView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -18,8 +22,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         webView = findViewById(R.id.webView)
-        
-        // WebView settings
+
+        // WebView settings for offline PWA
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -35,17 +39,29 @@ class MainActivity : AppCompatActivity() {
             allowContentAccess = true
         }
 
-        webView.webViewClient = WebViewClient()
+        // Load app from bundled assets (works 100% offline)
+        val assetLoader = WebViewAssetLoader.Builder()
+            .addPathHandler("/", AssetsPathHandler(this))
+            .build()
+
+        webView.webViewClient = LocalContentWebViewClient(assetLoader)
         webView.webChromeClient = WebChromeClient()
 
-        // Load your deployed app or localhost
-        // For local development (same WiFi network):
-        webView.loadUrl("http://192.168.1.10:5173")
-        
-        // For production, uncomment and set your deployed URL:
-        // webView.loadUrl("https://your-app.netlify.app")
+        webView.loadUrl("https://appassets.androidplatform.net/index.html")
     }
 
+    private inner class LocalContentWebViewClient(
+        private val assetLoader: WebViewAssetLoader
+    ) : WebViewClientCompat() {
+        override fun shouldInterceptRequest(
+            view: WebView,
+            request: WebResourceRequest
+        ): android.webkit.WebResourceResponse? {
+            return assetLoader.shouldInterceptRequest(request.url)
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack()
